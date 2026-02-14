@@ -1,0 +1,26 @@
+name: Build Linux Binary
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Rust (nightly)
+        uses: dtolnay/rust-toolchain@nightly
+      
+      - name: Build release binary
+        run: |
+          cargo build --release --bin nmsr-aas --features ears --package nmsr-aas
+      
+      - name: Upload Linux binary
+        uses: actions/upload-artifact@v4
+        with:
+          name: nmsr-aas-linux-x86_64
+          path: target/release/nmsr-aas
